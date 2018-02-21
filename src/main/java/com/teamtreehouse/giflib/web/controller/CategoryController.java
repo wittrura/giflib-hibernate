@@ -1,23 +1,36 @@
 package com.teamtreehouse.giflib.web.controller;
 
 import com.teamtreehouse.giflib.model.Category;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class CategoryController {
 
+    @Autowired
+    private SessionFactory sessionFactory;
+
     // Index of all categories
     @RequestMapping("/categories")
     public String listCategories(Model model) {
-        // TODO: Get all categories
-        List<Category> categories = new ArrayList<>();
+        Session session = sessionFactory.openSession();
+
+        CriteriaBuilder cb = session.getCriteriaBuilder();
+        CriteriaQuery<Category> query = cb.createQuery(Category.class);
+        query.from(Category.class);
+
+        List<Category> categories = session.createQuery(query).getResultList();
 
         model.addAttribute("categories",categories);
         return "category/index";
