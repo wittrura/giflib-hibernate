@@ -41,8 +41,8 @@ public class DataConfig {
         ds.setUrl(env.getProperty("giflib.db.url"));
 
         // set username and password
-        ds.setUsername(env.getProperty("giflib.db.username"));
-        ds.setPassword(env.getProperty("giflib.db.password"));
+//        ds.setUsername(env.getProperty("giflib.db.username"));
+//        ds.setPassword(env.getProperty("giflib.db.password"));
 
         return ds;
     }
