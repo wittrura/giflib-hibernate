@@ -1,5 +1,7 @@
 package com.teamtreehouse.giflib.model;
 
+import org.hibernate.annotations.Type;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -10,7 +12,8 @@ public class Gif {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Lob
+//    @Lob  - maps to oid type on postgres which causes problems on lookup
+    @Type(type="org.hibernate.type.BinaryType")
     private byte[] bytes;
     private String description;
 
