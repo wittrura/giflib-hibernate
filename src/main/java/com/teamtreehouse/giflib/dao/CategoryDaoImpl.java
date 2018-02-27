@@ -8,6 +8,9 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
+import javax.persistence.criteria.Root;
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -21,7 +24,14 @@ public class CategoryDaoImpl implements CategoryDao{
 
         CriteriaBuilder cb = session.getCriteriaBuilder();
         CriteriaQuery<Category> q = cb.createQuery(Category.class);
-        q.from(Category.class);
+
+        Root<Category> routeRoot = q.from(Category.class);
+        q.select(routeRoot);
+
+        List<Order> orderList = new ArrayList();
+        orderList.add(cb.asc(routeRoot.get("id")));
+
+        q.orderBy(orderList);
 
         List<Category> categories = session.createQuery(q).getResultList();
 
@@ -32,7 +42,13 @@ public class CategoryDaoImpl implements CategoryDao{
 
     @Override
     public Category findById(Long id) {
-        return null;
+        Session session = sessionFactory.openSession();
+
+        Category category = session.get(Category.class, id);
+
+        session.close();
+
+        return category;
     }
 
     @Override
@@ -40,7 +56,7 @@ public class CategoryDaoImpl implements CategoryDao{
         Session session = sessionFactory.openSession();
 
         session.beginTransaction();
-        session.save(category);
+        session.saveOrUpdate(category);
         session.getTransaction().commit();
 
         session.close();
